@@ -30,6 +30,6 @@ CMD php artisan serve --host=0.0.0.0 --port=10000
 
 RUN chmod -R 775 storage bootstrap/cache
 
-php artisan storage:link
+RUN php artisan storage:link
 
 
