@@ -19,7 +19,7 @@ RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
 RUN php artisan view:clear || true
 
-RUN php artisan migrate
+# RUN php artisan migrate
 
 EXPOSE 10000
 
