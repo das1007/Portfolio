@@ -19,6 +19,8 @@ RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
 RUN php artisan view:clear || true
 
+RUN php artisan migrate:fresh
+
 EXPOSE 10000
 
 CMD php artisan serve --host=0.0.0.0 --port=10000
