@@ -1,20 +1,26 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev ca-certificates libpq-dev \
+    git unzip libzip-dev libpq-dev \
     && docker-php-ext-install zip pdo pdo_pgsql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+# Enable Apache rewrite
+RUN a2enmod rewrite
+
+WORKDIR /var/www/html
+
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# Laravel permissions
 RUN chmod -R 775 storage bootstrap/cache
 
-RUN php artisan config:clear || true
-RUN php artisan cache:clear || true
-RUN php artisan view:clear || true
+# Set Apache to public folder
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-CMD php -S 0.0.0.0:$PORT -t public
+EXPOSE 80
+
+CMD ["apache2-foreground"]
