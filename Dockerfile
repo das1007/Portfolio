@@ -15,6 +15,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Fix permissions
 RUN chmod -R 775 storage bootstrap/cache
 
+RUN docker-php-ext-install pdo pdo_mysql
+
 # Clear caches
 RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
